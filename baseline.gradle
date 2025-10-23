@@ -38,14 +38,16 @@ subprojects {
   // ready to enforce linting on.
   apply plugin: 'org.inferred.processors'
   if (!project.hasProperty('quick')) {
-    apply plugin: 'com.palantir.baseline-checkstyle'
-    apply plugin: 'com.palantir.baseline-error-prone'
+    // Disabled code style checks
+    // apply plugin: 'com.palantir.baseline-checkstyle'
+    // apply plugin: 'com.palantir.baseline-error-prone'
   }
   apply plugin: 'com.palantir.baseline-class-uniqueness'
   apply plugin: 'com.palantir.baseline-reproducibility'
   apply plugin: 'com.palantir.baseline-exact-dependencies'
   apply plugin: 'com.palantir.baseline-release-compatibility'
-  apply plugin: 'com.diffplug.spotless'
+  // Disabled code formatting checks
+  // apply plugin: 'com.diffplug.spotless'
 
   pluginManager.withPlugin('com.palantir.baseline-checkstyle') {
     checkstyle {

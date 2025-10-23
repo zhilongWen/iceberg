@@ -125,6 +125,9 @@ allprojects {
   group = "org.apache.iceberg"
   version = projectVersion
   repositories {
+    // 中央仓库优先
+    mavenCentral()
+    
     // 阿里云Maven镜像 - 提高国内下载速度
     maven {
       url 'https://maven.aliyun.com/repository/central/'
@@ -134,9 +137,6 @@ allprojects {
       url 'https://maven.aliyun.com/repository/public/'
       name 'aliyun-public'
     }
-    
-    // 中央仓库
-    mavenCentral()
     
     // 本地Maven仓库最后使用
     mavenLocal()
