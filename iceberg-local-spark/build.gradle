@@ -78,6 +78,9 @@ dependencies {
     implementation libs.hadoop2.hdfs
     implementation libs.hadoop2.mapreduce.client.core
 
+    // Avro for reading Avro files
+    implementation libs.avro.avro
+
     // Logging
     compileOnly libs.slf4j.api
 
@@ -108,4 +111,68 @@ tasks.withType(ScalaCompile) {
         "-deprecation",
         "-feature"
     ]
+}
+
+// Task to run ReadAvroFileSuite
+tasks.register('runReadAvro', JavaExec) {
+    group = 'application'
+    description = 'Run ReadAvroFileSuite to read Avro metadata file'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.apache.iceberg.local.ReadAvroFileSuite'
+}
+
+// Task to run IcebergCompactionSuite
+tasks.register('runCompaction', JavaExec) {
+    group = 'application'
+    description = 'Run IcebergCompactionSuite to perform table compaction'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.apache.iceberg.local.IcebergCompactionSuite'
+}
+
+// Task to run SparkIcebergWriteFile
+tasks.register('runWriteFile', JavaExec) {
+    group = 'application'
+    description = 'Run SparkIcebergWriteFile to write data to Iceberg table'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.apache.iceberg.local.SparkIcebergWriteFile'
+}
+
+// Task to run SparkWriteSuite
+tasks.register('runWriteSuite', JavaExec) {
+    group = 'application'
+    description = 'Run SparkWriteSuite to test table existence check'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.apache.iceberg.local.SparkWriteSuite'
+}
+
+// Task to run SparkWriteWithPartitionSuite
+tasks.register('runWritePartition', JavaExec) {
+    group = 'application'
+    description = 'Run SparkWriteWithPartitionSuite to test partitioned table'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.apache.iceberg.local.SparkWriteWithPartitionSuite'
+}
+
+// Task to run SparkWriteWithPartitionBucketSuite
+tasks.register('runWritePartitionBucket', JavaExec) {
+    group = 'application'
+    description = 'Run SparkWriteWithPartitionBucketSuite to create partition + bucket table'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.apache.iceberg.local.SparkWriteWithPartitionBucketSuite'
+}
+
+// Task to run SparkWriteOrCreateSuite
+tasks.register('runWriteOrCreate', JavaExec) {
+    group = 'application'
+    description = 'Run SparkWriteOrCreateSuite - insert if exists, create if not'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.apache.iceberg.local.SparkWriteOrCreateSuite'
+}
+
+// Task to run SparkWriteWithPartitionPrimaryKeySuite
+tasks.register('runWritePrimaryKey', JavaExec) {
+    group = 'application'
+    description = 'Run SparkWriteWithPartitionPrimaryKeySuite - MERGE INTO for primary key uniqueness'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.apache.iceberg.local.SparkWriteWithPartitionPrimaryKeySuite'
 }
