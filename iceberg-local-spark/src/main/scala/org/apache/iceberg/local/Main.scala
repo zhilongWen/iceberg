@@ -33,6 +33,16 @@ package org.apache.iceberg.local
  *   - rdd               : Spark RDD API 演示
  *   - sql               : Spark SQL 演示
  *   - partition         : 分区表主键演示
+ *
+ * | Demo 名称          | 命令                                                           | 说明                  | 表名                             |
+ * |------------------|--------------------------------------------------------------|---------------------|--------------------------------|
+ * | cow-test         | ./gradlew :iceberg-local-spark:run --args="cow-test"         | Copy-on-Write 模式验证  | user_behavior_cow              |
+ * | mor-test         | ./gradlew :iceberg-local-spark:run --args="mor-test"         | Merge-on-Read 模式验证  | user_behavior_mor              |
+ * | schema-evolution | ./gradlew :iceberg-local-spark:run --args="schema-evolution" | Schema Evolution 演示 | user_behavior_schema_evolution |
+ * | branch           | ./gradlew :iceberg-local-spark:run --args="branch"           | 分支功能演示              | user_behavior_branch           |
+ * | partition        | ./gradlew :iceberg-local-spark:run --args="partition"        | 分区表主键演示             | user_behavior_part_bucket      |
+ * | rdd              | ./gradlew :iceberg-local-spark:run --args="rdd"              | Spark RDD API 演示    | sales_data                     |
+ * | sql              | ./gradlew :iceberg-local-spark:run --args="sql"              | Spark SQL 演示        | customers, orders              |
  */
 object Main {
   def main(args: Array[String]): Unit = {
@@ -55,6 +65,10 @@ object Main {
       case "schema-evolution" =>
         println("启动 Schema Evolution 演示（Main 分支）...")
         SparkIcebergTableSchemaEvolutionSuite.main(args)
+
+      case "branch" =>
+        println("启动 Iceberg 分支功能演示...")
+        SparkIcebergBranchSuite.main(args)
 
       case "rdd" =>
         println("启动 RDD API 演示...")
@@ -99,10 +113,12 @@ object Main {
         |                - 表名: iceberg_local.default.user_behavior_mor
         |
         |  🌿 branch     Iceberg 分支功能演示
-        |                - 创建和管理表分支（类似 Git Branch）
-        |                - 在分支上进行 Schema Evolution
-        |                - 分支隔离、独立快照、合并分支
-        |                - 表名: iceberg_local.default.user_behavior_part_bucket
+        |                - 主分支写入数据 → 创建 dev 分支 → dev 分支写入数据
+        |                - 分别查询主分支和 dev 分支数据
+        |                - 将 dev 分支数据合并到主分支 (MERGE INTO)
+        |                - 验证合并结果并查看快照历史
+        |                - Schema 保持一致，演示数据隔离和合并
+        |                - 表名: iceberg_local.default.user_behavior_branch
         |
         |  📊 schema-evolution  Schema Evolution 演示（Main 分支）
         |                - 演示在 Main 分支上进行 Schema Evolution
