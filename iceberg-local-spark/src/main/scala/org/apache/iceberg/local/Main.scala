@@ -26,11 +26,13 @@ package org.apache.iceberg.local
  *   ./gradlew :iceberg-local-spark:run --args="<demo_name>"
  *
  * Available demos:
- *   - cow-test   : Copy-on-Write 模式功能验证（验证为什么没有 delete 文件）
- *   - mor-test   : Merge-on-Read 模式功能验证（验证 delete 文件生成）
- *   - rdd        : Spark RDD API 演示
- *   - sql        : Spark SQL 演示
- *   - partition  : 分区表主键演示
+ *   - cow-test          : Copy-on-Write 模式功能验证（验证为什么没有 delete 文件）
+ *   - mor-test          : Merge-on-Read 模式功能验证（验证 delete 文件生成）
+ *   - branch            : Iceberg 分支功能演示（Branch + Schema Evolution）
+ *   - schema-evolution  : Schema Evolution 演示（Main 分支）
+ *   - rdd               : Spark RDD API 演示
+ *   - sql               : Spark SQL 演示
+ *   - partition         : 分区表主键演示
  */
 object Main {
   def main(args: Array[String]): Unit = {
@@ -49,6 +51,10 @@ object Main {
       case "mor-test" =>
         println("启动 Merge-on-Read 模式功能验证测试...")
         SparkIcebergMorSuite.main(args)
+
+      case "schema-evolution" =>
+        println("启动 Schema Evolution 演示（Main 分支）...")
+        SparkIcebergTableSchemaEvolutionSuite.main(args)
 
       case "rdd" =>
         println("启动 RDD API 演示...")
@@ -90,7 +96,20 @@ object Main {
         |  🔬 mor-test   Merge-on-Read 功能验证测试
         |                - 验证 MoR 模式会生成 delete 文件
         |                - 对比 CoW 和 MoR 的区别
-        |                - 表名: iceberg_test.default.user_behavior_mor_test
+        |                - 表名: iceberg_local.default.user_behavior_mor
+        |
+        |  🌿 branch     Iceberg 分支功能演示
+        |                - 创建和管理表分支（类似 Git Branch）
+        |                - 在分支上进行 Schema Evolution
+        |                - 分支隔离、独立快照、合并分支
+        |                - 表名: iceberg_local.default.user_behavior_part_bucket
+        |
+        |  📊 schema-evolution  Schema Evolution 演示（Main 分支）
+        |                - 演示在 Main 分支上进行 Schema Evolution
+        |                - ADD/DROP/RENAME COLUMN
+        |                - ALTER COLUMN TYPE/COMMENT
+        |                - Time Travel 查看不同 Schema 版本
+        |                - 表名: iceberg_local.default.user_behavior_schema_evolution
         |
         |  📊 rdd        Spark RDD API 演示
         |                - 使用 RDD 操作读写 Iceberg 表
@@ -109,10 +128,20 @@ object Main {
         |  # 验证 MoR 模式生成 delete 文件
         |  ./gradlew :iceberg-local-spark:run --args="mor-test"
         |
+        |  # 演示分支功能（Schema Evolution + 分支隔离）
+        |  ./gradlew :iceberg-local-spark:run --args="branch"
+        |
+        |  # Schema Evolution 演示（Main 分支）
+        |  ./gradlew :iceberg-local-spark:run --args="schema-evolution"
+        |
+        |  # RDD API 演示
+        |  ./gradlew :iceberg-local-spark:run --args="rdd"
+        |
         |提示:
         |  - 推荐按顺序运行 cow-test 和 mor-test 理解原理
-        |  - 运行后可查看 /tmp/iceberg-test-* 和 /tmp/iceberg-warehouse-*
-        |    目录的文件结构
+        |  - branch demo 展示 Iceberg 的 Git-like 分支功能
+        |  - schema-evolution 演示在 Main 分支上直接进行 Schema Evolution
+        |  - 所有表数据存储在 files/iceberg_warehouse 目录
         |
         |""".stripMargin)
   }
